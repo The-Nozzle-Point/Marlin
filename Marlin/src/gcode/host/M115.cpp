@@ -27,6 +27,10 @@
 #include "../gcode.h"
 #include "../queue.h"           // for getting the command port
 
+#if ENABLED(DEBUG_LEVELING_FEATURE)
+  #include "../../core/utility.h"
+#endif
+
 #if ENABLED(M115_GEOMETRY_REPORT)
   #include "../../module/motion.h"
 #endif
@@ -56,6 +60,8 @@
 /**
  * M115: Firmware Info
  *
+ *  D - Report detailed machine information when DEBUG_LEVELING_FEATURE is enabled
+ *
  * Capabilities string and extended capabilities report.
  * If a capability is not reported, hosts should assume
  * the capability is not present.
@@ -64,6 +70,10 @@
  *       at https://reprap.org/wiki/Firmware_Capabilities_Protocol
  */
 void GcodeSuite::M115() {
+
+  #if ENABLED(DEBUG_LEVELING_FEATURE)
+    if (parser.seen('D')) return log_machine_info();
+  #endif
 
   // Hosts should match one of these
   #define MACHINE_KINEMATICS "" \
