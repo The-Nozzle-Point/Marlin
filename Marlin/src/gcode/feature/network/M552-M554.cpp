@@ -31,6 +31,8 @@
 /**
  * M552: Set IP address, enable/disable network interface
  *
+ * Without parameters, report the interface state, MAC address, and IP address.
+ *
  *  S0   : disable networking
  *  S1   : enable networking
  *  S-1  : reset network interface
@@ -55,6 +57,7 @@ void GcodeSuite::M552() {
   }
   const bool nopar = !seenS && !seenP;
   if (nopar || seenS) ethernet.ETH0_report();
+  if (nopar) ethernet.MAC_report();
   if (nopar || seenP) M552_report();
 }
 
