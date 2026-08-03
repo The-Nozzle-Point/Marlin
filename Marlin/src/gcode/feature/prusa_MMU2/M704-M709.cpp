@@ -142,9 +142,10 @@ void GcodeSuite::M708() {
  * (i.e., If you disable the MMU via M709, it will not be activated after the printer resets.)
  *
  * Usage:
- *   M709 [ S | X ]
+ *   M709 [ R | S | X ]
  *
  * Parameters:
+ *   R         Report MMU3 operational statistics
  *   X<int>   Reset MMU (0:soft reset | 1:hardware reset | 42: erase MMU eeprom)
  *   S<bool>  Enable/Disable the MMU (1=ON | 0=OFF)
  *
@@ -152,11 +153,14 @@ void GcodeSuite::M708() {
  *   M709 X0  ; Issue an X0 command via communication into the MMU (soft reset)
  *   M709 X1  ; Toggle the MMU's reset pin (hardware reset)
  *   M709 X42 ; Erase MMU EEPROM
+ *   M709 R   ; Report MMU3 operational statistics
  *   M709 S1  ; Enable MMU
  *   M709 S0  ; Disable MMU
  *   M709     ; Serial message if enabled/disabled
  */
 void GcodeSuite::M709() {
+  if (parser.seen('R')) return MMU3_report();
+
   if (parser.seenval('S')) {
     if (parser.value_bool())
       mmu3.start();
